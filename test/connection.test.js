@@ -13,7 +13,7 @@ describe('JsonSocket connection', function() {
             assert.equal(serverSocket.isClosed(), false);
             async.parallel([
                 function(callback) {
-                    clientSocket.sendMessage({type: 'ping'}, callback);
+                    clientSocket.sendMessage({type: 'ping'}).then(callback);
                 },
                 function(callback) {
                     clientSocket.on('message', function(message) {
@@ -24,7 +24,7 @@ describe('JsonSocket connection', function() {
                 function(callback) {
                     serverSocket.on('message', function(message) {
                         assert.deepEqual(message, {type: 'ping'});
-                        serverSocket.sendMessage({type: 'pong'}, callback);
+                        serverSocket.sendMessage({type: 'pong'}).then(callback);
                     });
                 }
             ], function(err) {
@@ -43,7 +43,7 @@ describe('JsonSocket connection', function() {
             assert.equal(serverSocket.isClosed(), false);
             async.parallel([
                 function(callback) {
-                    clientSocket.sendMessage(longPayload, callback);
+                    clientSocket.sendMessage(longPayload).then(callback);
                 },
                 function(callback) {
                     clientSocket.on('message', function(message) {
@@ -54,7 +54,7 @@ describe('JsonSocket connection', function() {
                 function(callback) {
                     serverSocket.on('message', function(message) {
                         assert.deepEqual(message, longPayload);
-                        serverSocket.sendMessage({type: 'pong'}, callback);
+                        serverSocket.sendMessage({type: 'pong'}).then(callback);
                     });
                 }
             ], function(err) {
@@ -72,7 +72,7 @@ describe('JsonSocket connection', function() {
             async.parallel([
                 function(callback) {
                     async.forEach(helpers.range(1, 100), function(i, callback) {
-                        clientSocket.sendMessage({number: i}, callback);
+                        clientSocket.sendMessage({number: i}).then(callback);
                     }, callback);
                 },
                 function(callback) {
@@ -97,9 +97,7 @@ describe('JsonSocket connection', function() {
             if (err) return done(err);
             async.parallel([
                 function(callback) {
-                    clientSocket.sendEndMessage({type: 'ping'}, function(err) {
-                        callback(err);
-                    });
+                    clientSocket.sendEndMessage({type: 'ping'}).then(callback);
                 },
                 function(callback) {
                     serverSocket.on('message', function(message) {
@@ -195,10 +193,7 @@ describe('JsonSocket connection', function() {
                     assert.equal(message, 'test');
                 });
             });
-            JsonSocket.sendSingleMessage(server.address().port, '127.0.0.1', 'test', function(err){
-                assert.equal(err, null);
-                done();
-            });
+            JsonSocket.sendSingleMessage(server.address().port, '127.0.0.1', 'test').then(done);
         });
     });
 
@@ -212,10 +207,7 @@ describe('JsonSocket connection', function() {
                     assert.equal(message, 'test');
                 });
             });
-            JsonSocket.sendSingleMessage(server.address().port, '127.0.0.1', 'test', { delimeter: "¡"}, function(err){
-                assert.equal(err, null);
-                done();
-            });
+            JsonSocket.sendSingleMessage(server.address().port, '127.0.0.1', 'test', { delimeter: "¡"}).then(done);
         });
     });
 
@@ -231,7 +223,7 @@ describe('JsonSocket connection', function() {
               });
           });
         });
-        JsonSocket.sendSingleMessageAndReceive(server.address().port, '127.0.0.1', 'test', function(err, message){
+        JsonSocket.sendSingleMessageAndReceive(server.address().port, '127.0.0.1', 'test').then(message => {
             assert.equal(message, 'test')
             done();
         });
@@ -248,7 +240,7 @@ describe('JsonSocket connection', function() {
                   serverSocket.sendMessage('test');
               });
           });
-          JsonSocket.sendSingleMessageAndReceive(server.address().port, '127.0.0.1', 'test', { delimeter: "¡"}, function(err, message){
+          JsonSocket.sendSingleMessageAndReceive(server.address().port, '127.0.0.1', 'test', { delimeter: "¡"}).then(message => {
               assert.equal(message, 'test')
               done();
           });

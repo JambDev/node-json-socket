@@ -23,7 +23,7 @@ describe('JsonSocket shortcuts', function() {
                     });
                 },
                 function(callback) {
-                    JsonSocket.sendSingleMessage(server.address().port, server.address().host, {type: 'ping'}, callback);
+                    JsonSocket.sendSingleMessage(server.address().port, server.address().host, {type: 'ping'}).then(callback);
                 }
             ], function(err) {
                 if (err) return done(err);
@@ -44,17 +44,16 @@ describe('JsonSocket shortcuts', function() {
                             assert.equal(serverSocket.isClosed(), false);
                             setTimeout(function() {
                                 assert.equal(serverSocket.isClosed(), false);
-                                serverSocket.sendEndMessage({type: 'pong'}, callback);
+                                serverSocket.sendEndMessage({type: 'pong'}).then(callback);
                             }, 10);
                         });
                     });
                 },
                 function(callback) {
-                    JsonSocket.sendSingleMessageAndReceive(server.address().port, server.address().host, {type: 'ping'}, function(err, message) {
-                        if (err) return callback(err);
+                    JsonSocket.sendSingleMessageAndReceive(server.address().port, server.address().host, {type: 'ping'}).then(message => {
                         assert.deepEqual(message, {type: 'pong'});
                         callback();
-                    });
+					});
                 }
             ], function(err) {
                 if (err) return done(err);
