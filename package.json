@@ -2,6 +2,7 @@
   "name": "json-socket",
   "description": "An easy way to send JSON over TCP using sockets.",
   "main": "./lib/json-socket",
+  "types": "index.d.ts",
   "author": "Sebastian Seilund",
   "version": "0.3.0",
   "repository": {
@@ -29,6 +30,6 @@
     "mocha": "^3.0.2"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --recursive test"
+    "test": "mocha --recursive test"
   }
 }
