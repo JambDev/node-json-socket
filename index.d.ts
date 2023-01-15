@@ -8,7 +8,7 @@ declare class json_socket {
 
 	connect: net.Socket["connect"];
 
-	on: net.Socket["on"];
+	on: net.Socket["on"] & ((event: 'message', listener: (data: any) => void) => net.Socket);
 
 	end: net.Socket["end"];
 
